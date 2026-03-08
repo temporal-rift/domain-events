@@ -112,12 +112,6 @@
 
   <profiles>
     <profile>
-      <id>temporal-rift</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-    </profile>
-    <profile>
       <id>ghrepo</id>
       <build>
         <plugins>
