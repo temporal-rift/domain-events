@@ -24,17 +24,18 @@ jobs:
           java-distribution: temurin
           maven-version: 3.9.13
 
-      - name: Check if version changed
+      - name: Check if version already published
         id: version_check
         run: |
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          PREV_VERSION=$(git show HEAD~1:pom.xml | grep -m1 '<version>' | sed 's/.*<version>\(.*\)<\/version>/\1/' | tr -d ' ')
-          if [ "$VERSION" = "$PREV_VERSION" ]; then
-            echo "VERSION_CHANGED=false" >> $GITHUB_ENV
-          else
-            echo "VERSION_CHANGED=true" >> $GITHUB_ENV
-          fi
+          
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://maven.pkg.github.com/temporal-rift/domain-events/com/temporalrift/domain-events/$VERSION/domain-events-$VERSION.pom")
+
+          echo "HTTP Status: $STATUS"
+          echo "VERSION_CHANGED=$( [ "$STATUS" = "200" ] && echo false || echo true )" >> $GITHUB_ENV
 
       - name: Publish to GitHub Packages
         if: env.VERSION_CHANGED == 'true'
