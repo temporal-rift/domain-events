@@ -1,0 +1,51 @@
+name: Publish Domain Events
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.19.0
+        with:
+          java-version: 25
+          java-distribution: temurin
+          maven-version: 3.9.13
+
+      - name: Check if version changed
+        id: version_check
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          PREV_VERSION=$(git show HEAD~1:pom.xml | grep -m1 '<version>' | sed 's/.*<version>\(.*\)<\/version>/\1/' | tr -d ' ')
+          if [ "$VERSION" = "$PREV_VERSION" ]; then
+            echo "VERSION_CHANGED=false" >> $GITHUB_ENV
+          else
+            echo "VERSION_CHANGED=true" >> $GITHUB_ENV
+          fi
+
+      - name: Publish to GitHub Packages
+        if: env.VERSION_CHANGED == 'true'
+        run: mvn --batch-mode deploy -Pghrepo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create and push tag
+        if: env.VERSION_CHANGED == 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git tag v$VERSION
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/temporal-rift/domain-events.git v$VERSION
