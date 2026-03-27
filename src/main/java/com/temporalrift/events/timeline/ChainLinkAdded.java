@@ -7,12 +7,10 @@ import java.util.UUID;
  * Privacy: Public — delivered to all players
  */
 public record ChainLinkAdded(
-    UUID gameId,
-    UUID chainId,
-    UUID playerId,
-    UUID linkedEventId,
-    UUID linkedOutcomeId,
-    int chainLength,
-    UUID previousLinkEventId
-) {
-}
+        UUID gameId,
+        UUID chainId,
+        UUID playerId,
+        UUID linkedEventId,
+        UUID linkedOutcomeId,
+        int chainLength,
+        UUID previousLinkEventId) {}

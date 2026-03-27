@@ -8,15 +8,7 @@ import java.util.UUID;
  * Privacy: Public — delivered to all players
  */
 public record TimelineCollapsed(
-    UUID gameId,
-    int eraNumber,
-    List<PlayerFactionResult> winners,
-    List<PlayerFactionResult> losers
-) {
-    
-    public record PlayerFactionResult(
-        UUID playerId,
-        String faction
-    ) {
-    }
+        UUID gameId, int eraNumber, List<PlayerFactionResult> winners, List<PlayerFactionResult> losers) {
+
+    public record PlayerFactionResult(UUID playerId, String faction) {}
 }

@@ -8,10 +8,4 @@ import java.util.UUID;
  * Privacy: Public — delivered to all players
  */
 public record ActionRoundStarted(
-    UUID gameId,
-    int eraNumber,
-    int roundNumber,
-    int timerSeconds,
-    List<UUID> pendingPlayerIds
-) {
-}
+        UUID gameId, int eraNumber, int roundNumber, int timerSeconds, List<UUID> pendingPlayerIds) {}

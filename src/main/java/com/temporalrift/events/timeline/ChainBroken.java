@@ -7,10 +7,4 @@ import java.util.UUID;
  * Privacy: Public — delivered to all players
  */
 public record ChainBroken(
-    UUID gameId,
-    UUID chainId,
-    UUID brokenByPlayerId,
-    UUID targetPlayerId,
-    int chainLengthAtBreak
-) {
-}
+        UUID gameId, UUID chainId, UUID brokenByPlayerId, UUID targetPlayerId, int chainLengthAtBreak) {}

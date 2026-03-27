@@ -8,67 +8,52 @@ import java.util.UUID;
  * Provides consistent metadata for event processing, routing, and idempotency.
  */
 public record EventEnvelope(
-    /**
-     * Unique identifier for this event instance. Used for idempotency.
-     */
-    UUID eventId,
-    
-    /**
-     * Fully qualified event name e.g. "session.GameStarted"
-     */
-    String eventType,
-    
-    /**
-     * ID of the aggregate that produced this event
-     */
-    UUID aggregateId,
-    
-    /**
-     * Type of aggregate e.g. "Lobby", "FutureEvent"
-     */
-    String aggregateType,
-    
-    /**
-     * Always present — used as Kafka partition key to guarantee ordering within a game
-     */
-    UUID gameId,
-    
-    /**
-     * ISO-8601 timestamp of when the event occurred
-     */
-    Instant occurredAt,
-    
-    /**
-     * Schema version for this event type. Consumers must handle unknown versions gracefully.
-     */
-    int version,
-    
-    /**
-     * Event-specific data — defined per event type
-     */
-    Object payload
-) {
-    
+        /**
+         * Unique identifier for this event instance. Used for idempotency.
+         */
+        UUID eventId,
+
+        /**
+         * Fully qualified event name e.g. "session.GameStarted"
+         */
+        String eventType,
+
+        /**
+         * ID of the aggregate that produced this event
+         */
+        UUID aggregateId,
+
+        /**
+         * Type of aggregate e.g. "Lobby", "FutureEvent"
+         */
+        String aggregateType,
+
+        /**
+         * Always present — used as Kafka partition key to guarantee ordering within a game
+         */
+        UUID gameId,
+
+        /**
+         * ISO-8601 timestamp of when the event occurred
+         */
+        Instant occurredAt,
+
+        /**
+         * Schema version for this event type. Consumers must handle unknown versions gracefully.
+         */
+        int version,
+
+        /**
+         * Event-specific data — defined per event type
+         */
+        Object payload) {
+
     /**
      * Creates a new event envelope with the current timestamp.
      */
     public static EventEnvelope create(
-        String eventType,
-        UUID aggregateId,
-        String aggregateType,
-        UUID gameId,
-        int version,
-        Object payload
-    ) {
+            String eventType, UUID aggregateId, String aggregateType, UUID gameId, int version, Object payload) {
         return new EventEnvelope(
-            UUID.randomUUID(),
-            eventType,
-            aggregateId,
-            aggregateType,
-            gameId,
-            Instant.now(),
-            version,
-            payload
-        );
+                UUID.randomUUID(), eventType, aggregateId, aggregateType, gameId, Instant.now(), version, payload);
     }
 }

@@ -8,16 +8,11 @@ import java.util.UUID;
  * Privacy: Public — delivered to all players
  */
 public record ParadoxCascaded(
-    UUID gameId,
-    int eraNumber,
-    UUID paradoxId,
-    UUID affectedEventId,
-    List<ProbabilityState> carryForwardProbabilityState
-) {
-    
-    public record ProbabilityState(
-        UUID outcomeId,
-        int probability
-    ) {
-    }
+        UUID gameId,
+        int eraNumber,
+        UUID paradoxId,
+        UUID affectedEventId,
+        List<ProbabilityState> carryForwardProbabilityState) {
+
+    public record ProbabilityState(UUID outcomeId, int probability) {}
 }

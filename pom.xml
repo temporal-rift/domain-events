@@ -5,7 +5,13 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.temporalrift</groupId>
+  <parent>
+    <groupId>com.temporalrift</groupId>
+    <artifactId>temporal-rift-bom</artifactId>
+    <version>1.0.0</version>
+    <relativePath>../temporal-rift-bom/pom.xml</relativePath>
+  </parent>
+
   <artifactId>domain-events</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>

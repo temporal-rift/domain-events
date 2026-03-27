@@ -8,16 +8,7 @@ import java.util.UUID;
  * Privacy: Public — delivered to all players
  */
 public record OutcomeApplied(
-    UUID gameId,
-    int eraNumber,
-    UUID eventId,
-    UUID winningOutcomeId,
-    List<ProbabilityState> finalProbabilities
-) {
-    
-    public record ProbabilityState(
-        UUID outcomeId,
-        int probability
-    ) {
-    }
+        UUID gameId, int eraNumber, UUID eventId, UUID winningOutcomeId, List<ProbabilityState> finalProbabilities) {
+
+    public record ProbabilityState(UUID outcomeId, int probability) {}
 }
