@@ -39,11 +39,11 @@ public enum CardType {
         this.category = category;
     }
 
-    public CardCategory getCategory() {
-        return category;
-    }
-
     public static Set<CardType> byCategory(CardCategory category) {
         return Arrays.stream(values()).filter(c -> c.category == category).collect(Collectors.toUnmodifiableSet());
+    }
+
+    public CardCategory getCategory() {
+        return category;
     }
 }
