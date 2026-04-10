@@ -9,7 +9,7 @@
     <groupId>com.temporalrift</groupId>
     <artifactId>temporal-rift-bom</artifactId>
     <version>1.0.5</version>
-    <relativePath>../temporal-rift-bom/pom.xml</relativePath>
+    <relativePath/>
   </parent>
 
   <artifactId>domain-events</artifactId>
@@ -115,6 +115,32 @@
       </plugin>
     </plugins>
   </build>
+
+  <repositories>
+    <repository>
+      <id>github-temporal-rift-bom</id>
+      <url>https://maven.pkg.github.com/temporal-rift/temporal-rift-bom</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>github-temporal-rift-bom</id>
+      <url>https://maven.pkg.github.com/temporal-rift/temporal-rift-bom</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
   <profiles>
     <profile>
