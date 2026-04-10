@@ -12,7 +12,6 @@ Shared domain event contracts for Temporal Rift game services.
 Add as dependency in your service's `pom.xml`:
 
 ```xml
-
 <dependency>
   <groupId>com.temporalrift</groupId>
   <artifactId>domain-events</artifactId>
@@ -25,34 +24,40 @@ Add as dependency in your service's `pom.xml`:
 GitHub Packages requires authentication even for public packages. Add to your `~/.m2/settings.xml`:
 
 ```xml
-
 <servers>
   <server>
     <id>github-domain-events</id>
     <username>YOUR_GITHUB_USERNAME</username>
     <password>YOUR_GITHUB_TOKEN</password>
   </server>
+  <server>
+    <id>github-temporal-rift-bom</id>
+    <username>YOUR_GITHUB_USERNAME</username>
+    <password>YOUR_GITHUB_TOKEN</password>
+  </server>
 </servers>
 
 <profiles>
-<profile>
-  <id>temporal-rift</id>
-  <activation>
-    <activeByDefault>true</activeByDefault>
-  </activation>
-  <repositories>
-    <repository>
-      <id>github-domain-events</id>
-      <url>https://maven.pkg.github.com/temporal-rift/domain-events</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-</profile>
+  <profile>
+    <id>temporal-rift</id>
+    <activation>
+      <activeByDefault>true</activeByDefault>
+    </activation>
+    <repositories>
+      <repository>
+        <id>github-domain-events</id>
+        <url>https://maven.pkg.github.com/temporal-rift/domain-events</url>
+        <releases><enabled>true</enabled></releases>
+        <snapshots><enabled>false</enabled></snapshots>
+      </repository>
+      <repository>
+        <id>github-temporal-rift-bom</id>
+        <url>https://maven.pkg.github.com/temporal-rift/temporal-rift-bom</url>
+        <releases><enabled>true</enabled></releases>
+        <snapshots><enabled>false</enabled></snapshots>
+      </repository>
+    </repositories>
+  </profile>
 </profiles>
 ```
 
