@@ -18,11 +18,12 @@ jobs:
           fetch-depth: 2
 
       - name: Setup Maven Action
-        uses: s4u/setup-maven-action@v1.19.0
+        uses: s4u/setup-maven-action@v1.20.0
         with:
           java-version: 25
           java-distribution: temurin
           maven-version: 3.9.13
+          settings-servers: '[{"id":"github-temporal-rift-bom","username":"${{ github.actor }}","password":"${{ secrets.GITHUB_TOKEN }}"}]'
 
       - name: Check if version already published
         id: version_check
