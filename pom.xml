@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.temporalrift</groupId>
+    <groupId>io.github.temporal-rift</groupId>
     <artifactId>temporal-rift-bom</artifactId>
     <version>1.0.5</version>
     <relativePath/>
@@ -40,6 +40,8 @@
       <timezone>Europe/Madrid</timezone>
     </developer>
   </developers>
+
+  <url>https://github.com/temporal-rift/domain-events</url>
 
   <scm>
     <connection>scm:git:git@github.com:temporal-rift/domain-events.git</connection>
@@ -116,37 +118,21 @@
     </plugins>
   </build>
 
-  <repositories>
-    <repository>
-      <id>github-temporal-rift-bom</id>
-      <url>https://maven.pkg.github.com/temporal-rift/temporal-rift-bom</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>github-temporal-rift-bom</id>
-      <url>https://maven.pkg.github.com/temporal-rift/temporal-rift-bom</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-
   <profiles>
     <profile>
-      <id>ghrepo</id>
+      <id>central</id>
       <build>
         <plugins>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>${central-publishing-maven-plugin.version}</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+            </configuration>
+          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
@@ -160,15 +146,41 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${maven-javadoc-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.8</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
       </build>
-      <distributionManagement>
-        <repository>
-          <id>github</id>
-          <name>Temporal Rift - Domain Events Packages</name>
-          <url>https://maven.pkg.github.com/temporal-rift/domain-events</url>
-        </repository>
-      </distributionManagement>
     </profile>
   </profiles>
 

@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: write
 
     steps:
       - uses: actions/checkout@v4
@@ -26,16 +25,17 @@ jobs:
           settings-servers: |
             [
               {
-                "id": "github-domain-events",
-                "username": "${{ github.actor }}",
-                "password": "${{ secrets.GITHUB_TOKEN }}"
-              },
-              {
-                "id": "github-temporal-rift-bom",
-                "username": "TU_USUARIO_GITHUB",
-                "password": "${{ secrets.GH_PACKAGES_TOKEN }}"
+                "id": "central",
+                "username": "${{ secrets.SONATYPE_USERNAME }}",
+                "password": "${{ secrets.SONATYPE_PASSWORD }}"
               }
             ]
+
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Check if version already published
         id: version_check
@@ -51,41 +51,29 @@ jobs:
             echo "ERROR: mvn help:evaluate failed (exit $MVN_EXIT)"
             exit 1
           fi
-          # The version is the last non-empty line of output
           VERSION=$(grep -v '^\[' /tmp/mvn_version.txt | tail -1 | tr -d '[:space:]')
           echo "Resolved version: '$VERSION'"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-          REGISTRY_URL="https://maven.pkg.github.com/temporal-rift/domain-events/com/temporalrift/domain-events/$VERSION/domain-events-$VERSION.pom"
-          echo "--- Checking registry URL ---"
+          REGISTRY_URL="https://repo1.maven.org/maven2/com/temporalrift/domain-events/$VERSION/domain-events-$VERSION.pom"
+          echo "--- Checking Maven Central ---"
           echo "URL: $REGISTRY_URL"
 
-          RESPONSE=$(curl -s -o /tmp/registry_response.txt -w "%{http_code}" -L \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            "$REGISTRY_URL") || true
-          CURL_EXIT=$?
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -L "$REGISTRY_URL") || true
 
-          echo "curl exit code : $CURL_EXIT"
-          echo "HTTP status    : $RESPONSE"
-          echo "Response body  :"
-          cat /tmp/registry_response.txt || true
+          echo "HTTP status: $RESPONSE"
 
-          if [ $CURL_EXIT -ne 0 ]; then
-            echo "ERROR: curl failed with exit code $CURL_EXIT — treating version as unpublished"
-            echo "VERSION_CHANGED=true" >> $GITHUB_ENV
-          elif [ "$RESPONSE" = "200" ]; then
-            echo "Version $VERSION already exists in registry — skipping publish"
+          if [ "$RESPONSE" = "200" ]; then
+            echo "Version $VERSION already exists in Maven Central — skipping publish"
             echo "VERSION_CHANGED=false" >> $GITHUB_ENV
           else
-            echo "Version $VERSION not found in registry (HTTP $RESPONSE) — will publish"
+            echo "Version $VERSION not found in Maven Central (HTTP $RESPONSE) — will publish"
             echo "VERSION_CHANGED=true" >> $GITHUB_ENV
           fi
 
-      - name: Publish to GitHub Packages
+      - name: Publish to Maven Central
         if: env.VERSION_CHANGED == 'true'
-        run: mvn --batch-mode deploy -Pghrepo
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn --batch-mode deploy -Pcentral
 
       - name: Create and push tag
         if: env.VERSION_CHANGED == 'true'
