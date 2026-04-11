@@ -13,63 +13,21 @@ Add as dependency in your service's `pom.xml`:
 
 ```xml
 <dependency>
-  <groupId>com.temporalrift</groupId>
+  <groupId>io.github.temporal-rift</groupId>
   <artifactId>domain-events</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
-## GitHub Packages Configuration
-
-GitHub Packages requires authentication even for public packages. Add to your `~/.m2/settings.xml`:
-
-```xml
-<servers>
-  <server>
-    <id>github-domain-events</id>
-    <username>YOUR_GITHUB_USERNAME</username>
-    <password>YOUR_GITHUB_TOKEN</password>
-  </server>
-  <server>
-    <id>github-temporal-rift-bom</id>
-    <username>YOUR_GITHUB_USERNAME</username>
-    <password>YOUR_GITHUB_TOKEN</password>
-  </server>
-</servers>
-
-<profiles>
-  <profile>
-    <id>temporal-rift</id>
-    <activation>
-      <activeByDefault>true</activeByDefault>
-    </activation>
-    <repositories>
-      <repository>
-        <id>github-domain-events</id>
-        <url>https://maven.pkg.github.com/temporal-rift/domain-events</url>
-        <releases><enabled>true</enabled></releases>
-        <snapshots><enabled>false</enabled></snapshots>
-      </repository>
-      <repository>
-        <id>github-temporal-rift-bom</id>
-        <url>https://maven.pkg.github.com/temporal-rift/temporal-rift-bom</url>
-        <releases><enabled>true</enabled></releases>
-        <snapshots><enabled>false</enabled></snapshots>
-      </repository>
-    </repositories>
-  </profile>
-</profiles>
-```
-
-The token requires `read:packages` scope.
+No `~/.m2/settings.xml` configuration needed — `domain-events` is published to Maven Central and resolves automatically.
 
 ## Publishing
 
 Pushing to `main` triggers GitHub Actions automatically. Publishing only occurs when the version in `pom.xml` has
-changed. A git tag is created for each published version.
+changed and is not yet present in Maven Central. A git tag is created for each published version.
 
-For manual publishing:
+For manual publishing (requires `SONATYPE_USERNAME`/`SONATYPE_PASSWORD` and a GPG key in `~/.m2/settings.xml`):
 
 ```bash
-mvn clean deploy -Pghrepo
+mvn clean deploy -Pcentral
 ```
