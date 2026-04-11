@@ -37,6 +37,23 @@ jobs:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
+      - name: Wait for parent BOM to be available in Maven Central
+        run: |
+          BOM_VERSION=$(grep -A3 '<parent>' pom.xml | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | tr -d '[:space:]')
+          BOM_URL="https://repo1.maven.org/maven2/io/github/temporal-rift/temporal-rift-bom/${BOM_VERSION}/temporal-rift-bom-${BOM_VERSION}.pom"
+          echo "Waiting for BOM ${BOM_VERSION} at: ${BOM_URL}"
+          for i in $(seq 1 30); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L "$BOM_URL")
+            echo "Attempt $i: HTTP $STATUS"
+            if [ "$STATUS" = "200" ]; then
+              echo "BOM is available in Maven Central"
+              exit 0
+            fi
+            sleep 60
+          done
+          echo "ERROR: BOM not available in Maven Central after 30 minutes"
+          exit 1
+
       - name: Check if version already published
         id: version_check
         run: |
@@ -55,7 +72,7 @@ jobs:
           echo "Resolved version: '$VERSION'"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-          REGISTRY_URL="https://repo1.maven.org/maven2/com/temporalrift/domain-events/$VERSION/domain-events-$VERSION.pom"
+          REGISTRY_URL="https://repo1.maven.org/maven2/io/github/temporal-rift/domain-events/${VERSION}/domain-events-${VERSION}.pom"
           echo "--- Checking Maven Central ---"
           echo "URL: $REGISTRY_URL"
 
