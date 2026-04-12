@@ -15,7 +15,7 @@ Add as dependency in your service's `pom.xml`:
 <dependency>
   <groupId>io.github.temporal-rift</groupId>
   <artifactId>domain-events</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
