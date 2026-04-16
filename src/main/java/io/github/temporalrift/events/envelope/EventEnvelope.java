@@ -28,10 +28,26 @@ public record EventEnvelope(
 
     /**
      * Creates a new event envelope with the current timestamp.
+     * The event type is derived from the payload class using the convention
+     * "{package-last-segment}.{ClassName}" — e.g. a payload of type
+     * {@code io.github.temporalrift.events.session.LobbyCreated} yields {@code "session.LobbyCreated"}.
      */
     public static EventEnvelope create(
-            String eventType, UUID aggregateId, String aggregateType, UUID gameId, int version, Object payload) {
+            UUID aggregateId, String aggregateType, UUID gameId, int version, Object payload) {
         return new EventEnvelope(
-                UUID.randomUUID(), eventType, aggregateId, aggregateType, gameId, Instant.now(), version, payload);
+                UUID.randomUUID(),
+                deriveEventType(payload),
+                aggregateId,
+                aggregateType,
+                gameId,
+                Instant.now(),
+                version,
+                payload);
+    }
+
+    private static String deriveEventType(Object payload) {
+        var pkg = payload.getClass().getPackageName();
+        return pkg.substring(pkg.lastIndexOf('.') + 1) + "."
+                + payload.getClass().getSimpleName();
     }
 }
