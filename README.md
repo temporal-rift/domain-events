@@ -2,6 +2,24 @@
 
 Shared domain event contracts for Temporal Rift game services.
 
+## IDE Setup (IntelliJ)
+
+Copy the `.editorconfig` from `temporal-rift-bom` into the directory that contains all your cloned repos:
+
+```
+your-workspace/          ← copy .editorconfig here
+├── temporal-rift-bom/
+├── domain-events/
+├── game-service/
+└── ...
+```
+
+```bash
+cp temporal-rift-bom/.editorconfig .
+```
+
+IntelliJ picks it up automatically. No manual scheme import needed.
+
 ## Requirements
 
 - Java 25+
