@@ -5,17 +5,18 @@ Shared domain event contracts for Temporal Rift game services.
 ## Requirements
 
 - Java 25+
-- Maven 3.9+
+- Maven 3.11+
 
 ## Usage
 
 Add as dependency in your service's `pom.xml`:
 
 ```xml
+
 <dependency>
-  <groupId>io.github.temporal-rift</groupId>
-  <artifactId>domain-events</artifactId>
-  <version>1.0.6</version>
+    <groupId>io.github.temporal-rift</groupId>
+    <artifactId>domain-events</artifactId>
+    <version>1.0.7</version>
 </dependency>
 ```
 
